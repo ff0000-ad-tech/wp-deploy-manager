@@ -1,14 +1,6 @@
 ##### RED Interactive Agency - Ad Technology
 
-Deploy Manager Plugin (webpack)
+Deploy Manager
 ===============
 
-More docs forthcoming. Basic webpack implementation looks like:
-```javascript
-	plugins: [
-		...
-		new DeployManagerPlugin(this.deploy),
-		...
-	]
-```
-
+More docs forthcoming. 
