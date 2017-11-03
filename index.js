@@ -10,7 +10,7 @@ var logg = debug('deploy-manager:+');
 
 
 // replace all values containing maps to other key's values, format: [deploy.profile.key]
-function conformDeploy(deploy) {
+function conform(deploy) {
 	deploy = _.extend({}, deploy);
 	traverse(deploy).forEach(function(value) {
 		if (typeof value == 'string') {
@@ -45,4 +45,4 @@ function conformDeploy(deploy) {
 
 
 
-module.exports = { conformDeployProfile };
+module.exports = { conform };
