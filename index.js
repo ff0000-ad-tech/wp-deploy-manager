@@ -5,15 +5,12 @@ const escapeStringRegExp = require('escape-string-regexp');
 
 
 const debug = require('debug');
-var log = debug('deploy-manager-plugin');
-var logg = debug('deploy-manager-plugin:+');
+var log = debug('deploy-manager');
+var logg = debug('deploy-manager:+');
 
-function DeployManagerPlugin(deploy) {
-	this.deploy = conformDeployProfile(deploy);
-};
 
 // replace all values containing maps to other key's values, format: [deploy.profile.key]
-function conformDeployProfile(deploy) {
+function conformDeploy(deploy) {
 	deploy = _.extend({}, deploy);
 	traverse(deploy).forEach(function(value) {
 		if (typeof value == 'string') {
@@ -39,23 +36,13 @@ function conformDeployProfile(deploy) {
 			this.update(newValue);
 		}
 	});	
+	log('Deploy Profile:');
+	log(deploy);
 	return deploy;
 }
 
 
-DeployManagerPlugin.prototype.apply = function(compiler) {
-	var self = this;
-
-	compiler.plugin('emit', function(compilation, callback) {
-		compilation.settings.deploy = self.deploy;
-		log('Deploy Profile (compilation.settings.deploy):');
-		log(compilation.settings.deploy);
-		// return to webpack flow
-		callback();
-	});
-};
 
 
 
-
-module.exports = DeployManagerPlugin;
+module.exports = { conformDeployProfile };
