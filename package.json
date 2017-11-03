@@ -11,5 +11,10 @@
     "url": "git+https://github.com/ff0000-ad-tech/deploy-manager-plugin.git"
   },
   "author": "RED Interactive Agency",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "escape-string-regexp": "^1.0.5",
+    "lodash": "^4.17.4",
+    "traverse": "^0.6.6"
+  }
 }
