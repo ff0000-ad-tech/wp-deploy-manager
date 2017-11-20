@@ -12,26 +12,34 @@ var logg = debug('deploy-manager:+');
 
 // build the deploy-profile model
 function prepare(deploy) {
+	// resolve all of the [deploy.model.ref] paths
 	deploy = profile.conform(deploy);
+
+	// read the latest state into the deploy model
 	deploy = refresh(deploy);
+
+	// resolve environment
+	if (!deploy.target.environment) {
+		deploy.target.environment = environments.getEnvironment(
+			deploy.settings.environments,
+			deploy.settings.adParams.environmentId
+		);
+	}
 
 	log('Deploy Profile:');
 	log(deploy);
 	return deploy;
 }
 
+
 // refreshes the settings
 function refresh(deploy) {
 	log('refresh()');
 	// refresh settings
-	deploy.settings = settings.refresh(
-		deploy
-	);
+	deploy.settings = settings.refresh(deploy);
+
 	// refresh deploy paths
-	deploy = environments.refresh(
-		deploy.settings, 
-		deploy
-	);
+	deploy.env = environments.refresh(deploy);
 	return deploy;
 }
 
