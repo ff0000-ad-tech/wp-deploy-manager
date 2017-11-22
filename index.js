@@ -2,29 +2,20 @@ const _ = require('lodash');
 const path = require('path');
 
 const profile = require('./lib/profile.js');
-const settings = require('./lib/settings.js');
-const environments = require('./lib/environments.js');
+const adSettings = require('./lib/ad-settings.js');
+const adEnvironments = require('./lib/ad-environments.js');
 
 const debug = require('debug');
 var log = debug('deploy-manager');
-var logg = debug('deploy-manager:+');
 
 
 // build the deploy-profile model
-function prepare(deploy) {
+function init(deploy) {
 	// resolve all of the [deploy.model.ref] paths
 	deploy = profile.conform(deploy);
 
 	// read the latest state into the deploy model
-	deploy = refresh(deploy);
-
-	// resolve environment
-	if (!deploy.target.environment) {
-		deploy.target.environment = environments.getEnvironment(
-			deploy.settings.environments,
-			deploy.settings.adParams.environmentId
-		);
-	}
+	refresh(deploy);
 
 	log('Deploy Profile:');
 	log(deploy);
@@ -32,21 +23,22 @@ function prepare(deploy) {
 }
 
 
-// refreshes the settings
+
+
+// generate `deploy.ad` and `deploy.env`
 function refresh(deploy) {
 	log('refresh()');
-	// refresh settings
-	deploy.settings = settings.refresh(deploy);
+	// refresh ad-settings
+	deploy.ad = adSettings.refresh(deploy);
 
-	// refresh deploy paths
-	deploy.env = environments.refresh(deploy);
-	return deploy;
+	// refresh ad-environments
+	deploy.env = adEnvironments.refresh(deploy);
 }
 
 
 
 
 module.exports = { 
-	prepare,
+	init,
 	refresh
 };
