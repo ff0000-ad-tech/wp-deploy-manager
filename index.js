@@ -30,6 +30,7 @@ function refresh(deploy) {
 	log('refresh()');
 	// refresh ad-settings
 	deploy.ad = adSettings.refresh(deploy);
+	log(deploy.ad.assets);
 
 	// refresh ad-environments
 	deploy.env = adEnvironments.refresh(deploy);
