@@ -11,13 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ff0000-ad-tech/wp-deploy-manager.git"
+    "url": "https://github.com/ff0000-ad-tech/wp-deploy-manager.git"
   },
   "author": "RED Interactive Agency",
   "license": "MIT",
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
-    "hooks-regex": "git://github.com/ff0000-ad-tech/hooks-regex.git",
+    "@ff0000-ad-tech/hooks-regex": "latest",
     "lodash": "^4.17.4",
     "object-path": "^0.11.4",
     "prepend-http": "^2.0.0",
