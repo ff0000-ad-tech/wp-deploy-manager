@@ -21,6 +21,7 @@
     "@ff0000-ad-tech/wp-plugin-index": "^1.0.4",
     "@ff0000-ad-tech/wp-plugin-payload": "git+https://github.com/ff0000-ad-tech/wp-plugin-payload.git#inline",
     "@ff0000-ad-tech/wp-plugin-watch-offset": "^1.0.2",
+    "babel-loader": "^7.1.4",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.1",
     "escape-string-regexp": "^1.0.5",
