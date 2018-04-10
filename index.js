@@ -5,7 +5,7 @@ const Aliases = require('./lib/utils/aliases.js')
 const Plugins = require('./lib/plugins')
 const Babel = require('./lib/babel')
 
-const debug = require('debug')
+const debug = require('@ff0000-ad-tech/debug')
 var log = debug('DM')
 
 // deploy
