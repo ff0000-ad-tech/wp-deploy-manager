@@ -214,7 +214,12 @@ const execute = (config, scope) => {
 				}
 			]
 		],
-		plugins: ['transform-class-properties', 'transform-object-rest-spread', 'dynamic-import-webpack', 'syntax-dynamic-import']
+		plugins: [
+			'@babel/plugin-proposal-class-properties',
+			'@babel/plugin-proposal-object-rest-spread',
+			'dynamic-import-webpack',
+			'@babel/plugin-syntax-dynamic-import'
+		]
 	}
 
 	// get Babel loaders based on environment (debug or production)
