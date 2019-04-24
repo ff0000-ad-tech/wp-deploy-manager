@@ -24,6 +24,7 @@
 		"@babel/plugin-proposal-class-properties": "^7.0.0",
 		"@babel/plugin-proposal-object-rest-spread": "^7.0.0",
 		"@babel/plugin-syntax-dynamic-import": "^7.0.0",
+		"@babel/plugin-transform-block-scoping": "^7.4.0",
 		"@babel/preset-env": "^7.0.0",
 		"@ff0000-ad-tech/debug": "^4.0.2",
 		"@ff0000-ad-tech/fba-loader": "^1.0.0",
