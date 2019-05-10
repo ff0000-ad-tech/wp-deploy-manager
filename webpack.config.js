@@ -200,7 +200,7 @@ const execute = (config, scope) => {
 	const babelOptions = {
 		presets: [
 			[
-				'env',
+				'@babel/preset-env',
 				{
 					/**
 					 * "Loose mode enables certain transformers to
