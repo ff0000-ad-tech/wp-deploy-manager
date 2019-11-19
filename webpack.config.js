@@ -262,9 +262,6 @@ const execute = (config, scope) => {
 			path: path.resolve(scope, `${DM.deploy.get().output.context}/${DM.deploy.get().output.folder}`),
 			filename: '[name].bundle.js'
 		},
-		externals: {
-			'ad-load': 'adLoad'
-		},
 		resolve: {
 			mainFields: ['module', 'main', 'browser'],
 			alias: Object.assign(
