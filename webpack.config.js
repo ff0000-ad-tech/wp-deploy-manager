@@ -286,6 +286,9 @@ const execute = (config, scope) => {
 			fbaTypes
 		}),
 		optimization: DM.optimization.getOptimization(),
+		externals: {
+			'ad-global': 'window'
+		},
 		watch: DM.deploy.get().output.debug,
 		devtool: DM.deploy.get().output.debug ? 'source-map' : false
 	}
