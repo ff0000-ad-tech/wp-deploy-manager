@@ -122,6 +122,17 @@ const execute = (config, scope) => {
 	log('\nAd:')
 	log(DM.ad.get())
 
+	// indicates whether to inline assets as base64 into build
+	// - foregoes creating an FBA payload
+	const base64Inline = !!config.deploy.profile.base64Inline
+
+	// patterns that can be used w/ rollup-plugin-utils' createFilter util
+	// (see: https://github.com/rollup/rollup-pluginutils)
+	// accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
+	// also allows for optional query strings
+	const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
+	const fontIncludes = /\.(ttf|woff)(\?.*)?$/
+
 	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
 	 *
 	 *	these settings are unique to packaging-style
@@ -155,13 +166,6 @@ const execute = (config, scope) => {
 	log('\nPayload:')
 	log(DM.payload.get())
 
-	// patterns that can be used w/ rollup-plugin-utils' createFilter util
-	// (see: https://github.com/rollup/rollup-pluginutils)
-	// accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
-	// also allows for optional query strings
-	const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
-	const fontIncludes = /\.(ttf|woff)(\?.*)?$/
-
 	/** -- BABEL -----------------------------------------------------------------------------------------------
 	 *
 	 *
@@ -177,7 +181,10 @@ const execute = (config, scope) => {
 				{
 					loader: '@ff0000-ad-tech/fba-loader',
 					options: {
-						emitFile: false
+						emitFile: false,
+						base64Inline,
+						imageTypes: imageIncludes,
+						fontTypes: fontIncludes
 					}
 				}
 			]
@@ -262,6 +269,9 @@ const execute = (config, scope) => {
 			path: path.resolve(scope, `${DM.deploy.get().output.context}/${DM.deploy.get().output.folder}`),
 			filename: '[name].bundle.js'
 		},
+		externals: {
+			'ad-load': 'adLoad'
+		},
 		resolve: {
 			mainFields: ['module', 'main', 'browser'],
 			alias: Object.assign(
@@ -283,12 +293,14 @@ const execute = (config, scope) => {
 			DM,
 			PM,
 			buildEntry,
-			fbaTypes
+			fbaTypes,
+			base64Inline,
+			debug: DM.deploy.get().output.debug
 		}),
-		optimization: DM.optimization.getOptimization(),
 		externals: {
 			'ad-global': 'window'
 		},
+		optimization: DM.optimization.getOptimization(),
 		watch: DM.deploy.get().output.debug,
 		devtool: DM.deploy.get().output.debug ? 'source-map' : false
 	}
