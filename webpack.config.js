@@ -209,24 +209,20 @@ const execute = (config, scope) => {
 			[
 				'@babel/preset-env',
 				{
-					/**
-					 * "Loose mode enables certain transformers to
-					 * generate cleaner output that lacks specific ES6 edgecases.
-					 * These edgecases are either unlikely to appear in your code
-					 * or the inclusion of them introduces significant overhead."
-					 *
-					 * See: https://developit.github.io/babel-legacy-docs//docs/advanced/loose/
-					 */
+					useBuiltIns: 'usage', // alternative mode: "entry"
+					corejs: 3, // default would be 2
 					loose: true
+					// targets: '> 0.25%, not dead'
+					// // set your own target environment here (see Browserslist)
 				}
 			]
 		],
 		plugins: [
 			'@babel/plugin-proposal-class-properties',
-			'@babel/plugin-proposal-object-rest-spread',
-			'dynamic-import-webpack',
-			'@babel/plugin-syntax-dynamic-import',
-			'@babel/plugin-transform-block-scoping',
+			// '@babel/plugin-proposal-object-rest-spread',
+			// 'dynamic-import-webpack',
+			// '@babel/plugin-syntax-dynamic-import',
+			// '@babel/plugin-transform-block-scoping',
 			[
 				'@babel/plugin-transform-react-jsx',
 				{
