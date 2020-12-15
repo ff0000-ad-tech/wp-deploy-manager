@@ -149,7 +149,7 @@ const execute = (config, scope) => {
 						name: 'inline',
 						type: 'inline',
 						assets: {
-							get: function() {
+							get: function () {
 								return DM.ad.get().settings.ref.assets.preloader.images.map(obj => {
 									return obj.source
 								})
@@ -226,7 +226,14 @@ const execute = (config, scope) => {
 			'@babel/plugin-proposal-object-rest-spread',
 			'dynamic-import-webpack',
 			'@babel/plugin-syntax-dynamic-import',
-			'@babel/plugin-transform-block-scoping'
+			'@babel/plugin-transform-block-scoping',
+			[
+				'@babel/plugin-transform-react-jsx',
+				{
+					pragma: 'h',
+					pragmaFrag: 'Fragment'
+				}
+			]
 		]
 	}
 
@@ -253,7 +260,7 @@ const execute = (config, scope) => {
 	const buildNodeModulesAliases = DM.aliases.getTopLevel(path.resolve(DM.deploy.get().source.context, 'node_modules/@ff0000-ad-tech'))
 
 	// build bundle entry path
-	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/Ad.js`)
+	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/bundle.js`)
 
 	return {
 		mode: DM.deploy.get().output.debug ? 'development' : 'production',
