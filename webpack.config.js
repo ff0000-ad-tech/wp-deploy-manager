@@ -196,27 +196,13 @@ const execute = (config, scope) => {
 					loader: 'style-loader' // creates style nodes from JS strings
 				},
 				{
-					loader: 'css-loader', // translates CSS into CommonJS
+					loader: 'css-loader', // translates CSS into JS-strings
 					options: {
-						esModule: true,
+						sourceMap: false
 					}
 				},
 				{
 					loader: 'sass-loader' // compiles Sass to CSS
-				}
-			]
-		},
-		{
-			test: /\.css$/,
-			use: [
-				{
-					loader: 'style-loader'
-				},
-				{
-					loader: 'css-loader',
-					options: {
-						esModule: true,
-					}
 				}
 			]
 		}
@@ -307,7 +293,8 @@ const execute = (config, scope) => {
 			'ad-load': 'adLoad'
 		},
 		resolve: {
-			mainFields: ['module', 'main', 'browser'],
+			// mainFields: ['module', 'main', 'browser'],
+			extensions: ['.js', '.jsx'],
 			alias: Object.assign(
 				{
 					AdData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/AdData`),
