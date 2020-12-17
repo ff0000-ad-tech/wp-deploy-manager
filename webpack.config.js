@@ -122,6 +122,12 @@ const execute = (config, scope) => {
 	log('\nAd:')
 	log(DM.ad.get())
 
+	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
+	 *
+	 *	these settings are unique to packaging-style
+	 *
+	 *
+	 */
 	// indicates whether to inline assets as base64 into build
 	// - foregoes creating an FBA payload
 	const base64Inline = !!config.deploy.profile.base64Inline
@@ -133,12 +139,18 @@ const execute = (config, scope) => {
 	const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
 	const fontIncludes = /\.(ttf|woff)(\?.*)?$/
 
-	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
-	 *
-	 *	these settings are unique to packaging-style
-	 *
-	 *
-	 */
+	// FBA type objects used with binary-imports module
+	// (https://github.com/ff0000-ad-tech/binary-imports)
+	const fbaTypes = [
+		{
+			type: 'fbAi',
+			include: imageIncludes
+		},
+		{
+			type: 'fbAf',
+			include: fontIncludes
+		}
+	]
 	DM.payload.prepare(
 		_.merge(
 			{
@@ -149,7 +161,7 @@ const execute = (config, scope) => {
 						name: 'inline',
 						type: 'inline',
 						assets: {
-							get: function () {
+							get: () => {
 								return DM.ad.get().settings.ref.assets.preloader.images.map(obj => {
 									return obj.source
 								})
@@ -166,114 +178,14 @@ const execute = (config, scope) => {
 	log('\nPayload:')
 	log(DM.payload.get())
 
-	/** -- BABEL -----------------------------------------------------------------------------------------------
-	 *
-	 *
-	 *
-	 */
-	log(`using ${DM.deploy.get().output.debug ? 'debug' : 'production'} Babel settings`)
-
-	const loaders = [
-		// loads images and fonts
-		{
-			test: [].concat(imageIncludes).concat(fontIncludes),
-			use: [
-				{
-					loader: '@ff0000-ad-tech/fba-loader',
-					options: {
-						emitFile: false,
-						base64Inline,
-						imageTypes: imageIncludes,
-						fontTypes: fontIncludes
-					}
-				}
-			]
-		},
-		{
-			test: /\.scss$/,
-			use: [
-				{
-					loader: 'style-loader' // creates style nodes from JS strings
-				},
-				{
-					loader: 'css-loader', // translates CSS into JS-strings
-					options: {
-						sourceMap: false
-					}
-				},
-				{
-					loader: 'sass-loader' // compiles Sass to CSS
-				}
-			]
-		}
-	]
-
-	// FBA type objects used with binary-imports module
-	// (https://github.com/ff0000-ad-tech/binary-imports)
-	const fbaTypes = [
-		{
-			type: 'fbAi',
-			include: imageIncludes
-		},
-		{
-			type: 'fbAf',
-			include: fontIncludes
-		}
-	]
-
-	const babelOptions = {
-		presets: [
-			[
-				'@babel/preset-env',
-				{
-					useBuiltIns: 'usage', // alternative mode: "entry"
-					corejs: 3, // default would be 2
-					loose: true
-					// targets: '> 0.25%, not dead'
-					// // set your own target environment here (see Browserslist)
-				}
-			]
-		],
-		plugins: [
-			'@babel/plugin-proposal-class-properties',
-			// '@babel/plugin-proposal-object-rest-spread',
-			// 'dynamic-import-webpack',
-			// '@babel/plugin-syntax-dynamic-import',
-			// '@babel/plugin-transform-block-scoping',
-			[
-				'@babel/plugin-transform-react-jsx',
-				{
-					pragma: 'h',
-					pragmaFrag: 'Fragment'
-				}
-			]
-		]
-	}
-
-	// get Babel loaders based on environment (debug or production)
-	const babelLoaderCreator = DM.deploy.get().output.debug ? DM.babel.debug : DM.babel.production
-	const babelLoaders = babelLoaderCreator({
-		DM,
-		babelOptions,
-		imageIncludes,
-		fontIncludes
-	})
-	var rules = [].concat(loaders).concat(babelLoaders)
-
 	/** -- WEBPACK RUNTIME -----------------------------------------------------------------------------------------------
 	 *
 	 *
 	 *
 	 */
-	/**
-	 * alias obj for config.resolve
-	 * will force all build node_modules to use only top-level packages
-	 * to allow for ad-specific hacks / non-published changes
-	 */
-	const buildNodeModulesAliases = DM.aliases.getTopLevel(path.resolve(DM.deploy.get().source.context, 'node_modules/@ff0000-ad-tech'))
 
 	// build bundle entry path
-	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/bundle.js`)
+	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/build.js`)
 
 	return {
 		mode: DM.deploy.get().output.debug ? 'development' : 'production',
@@ -295,20 +207,22 @@ const execute = (config, scope) => {
 		resolve: {
 			// mainFields: ['module', 'main', 'browser'],
 			extensions: ['.js', '.jsx'],
-			alias: Object.assign(
-				{
-					AdData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/AdData`),
-					FtData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/FtData`),
-					GdcData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/GdcData`),
-					'@common': path.resolve(scope, `${DM.deploy.get().source.context}/common`),
-					'@size': path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}`)
-				},
-				buildNodeModulesAliases
-			),
+			alias: Object.assign({
+				AdData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/AdData`),
+				FtData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/FtData`),
+				GdcData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/GdcData`),
+				'@common': path.resolve(scope, `${DM.deploy.get().source.context}/common`),
+				'@size': path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}`)
+			}),
 			plugins: [new IndexVariationResolvePlugin(DM.deploy.get().source.index.replace('.html', ''))]
 		},
 		module: {
-			rules: rules
+			rules: DM.babel.getBabel({
+				DM,
+				imageIncludes,
+				fontIncludes,
+				base64Inline
+			})
 		},
 		plugins: DM.plugins.getPlugins({
 			DM,
