@@ -132,25 +132,7 @@ const execute = (config, scope) => {
 	// - foregoes creating an FBA payload
 	const base64Inline = !!config.deploy.profile.base64Inline
 
-	// // patterns that can be used w/ rollup-plugin-utils' createFilter util
-	// // (see: https://github.com/rollup/rollup-pluginutils)
-	// // accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
-	// // also allows for optional query strings
-	// const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
-	// const fontIncludes = /\.(ttf|woff)(\?.*)?$/
-
-	// // FBA type objects used with binary-imports module
-	// // (https://github.com/ff0000-ad-tech/binary-imports)
-	// const fbaTypes = [
-	// 	{
-	// 		type: 'fbAi',
-	// 		include: imageIncludes
-	// 	},
-	// 	{
-	// 		type: 'fbAf',
-	// 		include: fontIncludes
-	// 	}
-	// ]
+	// payload plugin watches index for settings & preloader changes
 	DM.payload.prepare(
 		_.merge(
 			{
@@ -195,9 +177,6 @@ const execute = (config, scope) => {
 		output: {
 			path: path.resolve(scope, `${DM.deploy.get().output.context}/${DM.deploy.get().output.folder}`),
 			filename: '[name].bundle.js'
-		},
-		externals: {
-			'ad-load': 'adLoad'
 		},
 		resolve: {
 			// mainFields: ['module', 'main', 'browser'],

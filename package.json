@@ -31,7 +31,7 @@
 		"@ff0000-ad-tech/fba-loader": "^1.1.0",
 		"@ff0000-ad-tech/hooks-regex": "^1.0.2",
 		"@ff0000-ad-tech/wp-plugin-assets": "git+ssh://git@github.com:ff0000-ad-tech/wp-plugin-assets.git#preact",
-		"@ff0000-ad-tech/wp-plugin-index": "^3.0.0",
+		"@ff0000-ad-tech/wp-plugin-index": "git+ssh://git@github.com:ff0000-ad-tech/wp-plugin-index.git#preact",
 		"@ff0000-ad-tech/wp-plugin-payload": "git+ssh://git@github.com:ff0000-ad-tech/wp-plugin-payload.git#preact",
 		"@ff0000-ad-tech/wp-plugin-watch-offset": "^2.0.0",
 		"@ff0000-ad-tech/wp-process-manager": "^1.0.4",
