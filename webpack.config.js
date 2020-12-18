@@ -214,12 +214,7 @@ const execute = (config, scope) => {
 		module: {
 			rules: DM.babel.getBabel({ base64Inline })
 		},
-		plugins: DM.plugins.getPlugins({
-			DM,
-			PM,
-			fbaTypes,
-			base64Inline
-		}),
+		plugins: DM.plugins.getPlugins({ DM, PM, base64Inline }),
 		externals: {
 			'ad-global': 'window'
 		},
