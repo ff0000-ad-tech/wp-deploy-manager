@@ -212,12 +212,7 @@ const execute = (config, scope) => {
 			plugins: [new IndexVariationResolvePlugin(DM.deploy.get().source.index.replace('.html', ''))]
 		},
 		module: {
-			rules: DM.babel.getBabel({
-				DM,
-				imageIncludes,
-				fontIncludes,
-				base64Inline
-			})
+			rules: DM.babel.getBabel({ base64Inline })
 		},
 		plugins: DM.plugins.getPlugins({
 			DM,
