@@ -30,7 +30,7 @@
 		"@ff0000-ad-tech/debug": "^4.0.2",
 		"@ff0000-ad-tech/fba-loader": "^1.1.0",
 		"@ff0000-ad-tech/hooks-regex": "^1.0.2",
-		"@ff0000-ad-tech/wp-plugin-assets": "^3.1.0",
+		"@ff0000-ad-tech/wp-plugin-assets": "git+ssh://git@github.com:ff0000-ad-tech/wp-plugin-assets.git#preact",
 		"@ff0000-ad-tech/wp-plugin-index": "^3.0.0",
 		"@ff0000-ad-tech/wp-plugin-payload": "git+ssh://git@github.com:ff0000-ad-tech/wp-plugin-payload.git#preact",
 		"@ff0000-ad-tech/wp-plugin-watch-offset": "^2.0.0",
@@ -66,7 +66,7 @@
 		"eslint-config-prettier": "^2.9.0",
 		"eslint-plugin-prettier": "^2.5.0",
 		"np": "^2.19.0",
-		"prettier": "^1.10.2"
+		"prettier": "^2.2.1"
 	},
 	"peerDependencies": {
 		"acorn": "6.x",

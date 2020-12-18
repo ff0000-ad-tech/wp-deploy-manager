@@ -132,25 +132,25 @@ const execute = (config, scope) => {
 	// - foregoes creating an FBA payload
 	const base64Inline = !!config.deploy.profile.base64Inline
 
-	// patterns that can be used w/ rollup-plugin-utils' createFilter util
-	// (see: https://github.com/rollup/rollup-pluginutils)
-	// accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
-	// also allows for optional query strings
-	const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
-	const fontIncludes = /\.(ttf|woff)(\?.*)?$/
+	// // patterns that can be used w/ rollup-plugin-utils' createFilter util
+	// // (see: https://github.com/rollup/rollup-pluginutils)
+	// // accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
+	// // also allows for optional query strings
+	// const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
+	// const fontIncludes = /\.(ttf|woff)(\?.*)?$/
 
-	// FBA type objects used with binary-imports module
-	// (https://github.com/ff0000-ad-tech/binary-imports)
-	const fbaTypes = [
-		{
-			type: 'fbAi',
-			include: imageIncludes
-		},
-		{
-			type: 'fbAf',
-			include: fontIncludes
-		}
-	]
+	// // FBA type objects used with binary-imports module
+	// // (https://github.com/ff0000-ad-tech/binary-imports)
+	// const fbaTypes = [
+	// 	{
+	// 		type: 'fbAi',
+	// 		include: imageIncludes
+	// 	},
+	// 	{
+	// 		type: 'fbAf',
+	// 		include: fontIncludes
+	// 	}
+	// ]
 	DM.payload.prepare(
 		_.merge(
 			{
@@ -183,19 +183,14 @@ const execute = (config, scope) => {
 	 *
 	 *
 	 */
-
-	// build bundle entry path
-	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/build.js`)
-
 	return {
 		mode: DM.deploy.get().output.debug ? 'development' : 'production',
 		entry: {
 			// are injected into index.html, via wp-plugin-index
 			initial: path.resolve(scope, `${DM.deploy.get().source.context}/node_modules/@ff0000-ad-tech/ad-entry/index.js`),
 			inline: path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/.inline-imports.js`),
-
 			// is bundled & polite-loaded into index.html
-			build: buildEntry
+			build: path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/build.js`)
 		},
 		output: {
 			path: path.resolve(scope, `${DM.deploy.get().output.context}/${DM.deploy.get().output.folder}`),
@@ -227,10 +222,8 @@ const execute = (config, scope) => {
 		plugins: DM.plugins.getPlugins({
 			DM,
 			PM,
-			buildEntry,
 			fbaTypes,
-			base64Inline,
-			debug: DM.deploy.get().output.debug
+			base64Inline
 		}),
 		externals: {
 			'ad-global': 'window'
