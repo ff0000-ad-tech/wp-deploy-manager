@@ -128,8 +128,7 @@ const execute = (config, scope) => {
 	 *
 	 *
 	 */
-	// indicates whether to inline assets as base64 into build
-	// - foregoes creating an FBA payload
+	// indicates whether to inline assets as base64 or bundle as single binary payload
 	const base64Inline = !!config.deploy.profile.base64Inline
 
 	// payload plugin watches index for settings & preloader changes
@@ -193,7 +192,7 @@ const execute = (config, scope) => {
 		module: {
 			rules: DM.babel.getBabel({ base64Inline })
 		},
-		plugins: DM.plugins.getPlugins({ DM, PM, base64Inline }),
+		plugins: DM.plugins.getPlugins({ scope, DM, PM, base64Inline }),
 		externals: {
 			'ad-global': 'window'
 		},
