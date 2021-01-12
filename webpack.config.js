@@ -122,23 +122,16 @@ const execute = (config, scope) => {
 	log('\nAd:')
 	log(DM.ad.get())
 
-	// indicates whether to inline assets as base64 into build
-	// - foregoes creating an FBA payload
-	const base64Inline = !!config.deploy.profile.base64Inline
-
-	// patterns that can be used w/ rollup-plugin-utils' createFilter util
-	// (see: https://github.com/rollup/rollup-pluginutils)
-	// accepts either a RegExp, glob/minimatch pattern, or an array of either of the types mentioned
-	// also allows for optional query strings
-	const imageIncludes = /\.(png|jpg|gif|svg)(\?.*)?$/
-	const fontIncludes = /\.(ttf|woff)(\?.*)?$/
-
 	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
 	 *
 	 *	these settings are unique to packaging-style
 	 *
 	 *
 	 */
+	// indicates whether to inline assets as base64 or bundle as single binary payload
+	const base64Inline = !!config.deploy.profile.base64Inline
+
+	// payload plugin watches index for settings & preloader changes
 	DM.payload.prepare(
 		_.merge(
 			{
@@ -149,7 +142,7 @@ const execute = (config, scope) => {
 						name: 'inline',
 						type: 'inline',
 						assets: {
-							get: function() {
+							get: () => {
 								return DM.ad.get().settings.ref.assets.preloader.images.map(obj => {
 									return obj.source
 								})
@@ -166,137 +159,40 @@ const execute = (config, scope) => {
 	log('\nPayload:')
 	log(DM.payload.get())
 
-	/** -- BABEL -----------------------------------------------------------------------------------------------
-	 *
-	 *
-	 *
-	 */
-	log(`using ${DM.deploy.get().output.debug ? 'debug' : 'production'} Babel settings`)
-
-	const loaders = [
-		// loads images and fonts
-		{
-			test: [].concat(imageIncludes).concat(fontIncludes),
-			use: [
-				{
-					loader: '@ff0000-ad-tech/fba-loader',
-					options: {
-						emitFile: false,
-						base64Inline,
-						imageTypes: imageIncludes,
-						fontTypes: fontIncludes
-					}
-				}
-			]
-		}
-	]
-
-	// FBA type objects used with binary-imports module
-	// (https://github.com/ff0000-ad-tech/binary-imports)
-	const fbaTypes = [
-		{
-			type: 'fbAi',
-			include: imageIncludes
-		},
-		{
-			type: 'fbAf',
-			include: fontIncludes
-		}
-	]
-
-	const babelOptions = {
-		presets: [
-			[
-				'@babel/preset-env',
-				{
-					/**
-					 * "Loose mode enables certain transformers to
-					 * generate cleaner output that lacks specific ES6 edgecases.
-					 * These edgecases are either unlikely to appear in your code
-					 * or the inclusion of them introduces significant overhead."
-					 *
-					 * See: https://developit.github.io/babel-legacy-docs//docs/advanced/loose/
-					 */
-					loose: true
-				}
-			]
-		],
-		plugins: [
-			'@babel/plugin-proposal-class-properties',
-			'@babel/plugin-proposal-object-rest-spread',
-			'dynamic-import-webpack',
-			'@babel/plugin-syntax-dynamic-import',
-			'@babel/plugin-transform-block-scoping'
-		]
-	}
-
-	// get Babel loaders based on environment (debug or production)
-	const babelLoaderCreator = DM.deploy.get().output.debug ? DM.babel.debug : DM.babel.production
-	const babelLoaders = babelLoaderCreator({
-		DM,
-		babelOptions,
-		imageIncludes,
-		fontIncludes
-	})
-	var rules = [].concat(loaders).concat(babelLoaders)
-
 	/** -- WEBPACK RUNTIME -----------------------------------------------------------------------------------------------
 	 *
 	 *
 	 *
 	 */
-	/**
-	 * alias obj for config.resolve
-	 * will force all build node_modules to use only top-level packages
-	 * to allow for ad-specific hacks / non-published changes
-	 */
-	const buildNodeModulesAliases = DM.aliases.getTopLevel(path.resolve(DM.deploy.get().source.context, 'node_modules/@ff0000-ad-tech'))
-
-	// build bundle entry path
-	const buildEntry = path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/Ad.js`)
-
 	return {
 		mode: DM.deploy.get().output.debug ? 'development' : 'production',
 		entry: {
 			// are injected into index.html, via wp-plugin-index
 			initial: path.resolve(scope, `${DM.deploy.get().source.context}/node_modules/@ff0000-ad-tech/ad-entry/index.js`),
 			inline: path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/.inline-imports.js`),
-
 			// is bundled & polite-loaded into index.html
-			build: buildEntry
+			build: path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/build.js`)
 		},
 		output: {
 			path: path.resolve(scope, `${DM.deploy.get().output.context}/${DM.deploy.get().output.folder}`),
 			filename: '[name].bundle.js'
 		},
-		externals: {
-			'ad-load': 'adLoad'
-		},
 		resolve: {
-			mainFields: ['module', 'main', 'browser'],
-			alias: Object.assign(
-				{
-					AdData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/AdData`),
-					FtData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/FtData`),
-					GdcData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/GdcData`),
-					'@common': path.resolve(scope, `${DM.deploy.get().source.context}/common`),
-					'@size': path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}`)
-				},
-				buildNodeModulesAliases
-			),
+			// mainFields: ['module', 'main', 'browser'],
+			extensions: ['.js', '.jsx'],
+			alias: Object.assign({
+				AdData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/AdData`),
+				FtData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/FtData`),
+				GdcData: path.resolve(scope, `${DM.deploy.get().source.context}/common/js/GdcData`),
+				'@common': path.resolve(scope, `${DM.deploy.get().source.context}/common`),
+				'@size': path.resolve(scope, `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}`)
+			}),
 			plugins: [new IndexVariationResolvePlugin(DM.deploy.get().source.index.replace('.html', ''))]
 		},
 		module: {
-			rules: rules
+			rules: DM.babel.getBabel({ base64Inline })
 		},
-		plugins: DM.plugins.getPlugins({
-			DM,
-			PM,
-			buildEntry,
-			fbaTypes,
-			base64Inline,
-			debug: DM.deploy.get().output.debug
-		}),
+		plugins: DM.plugins.getPlugins({ scope, DM, PM, base64Inline }),
 		externals: {
 			'ad-global': 'window'
 		},
