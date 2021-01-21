@@ -25,11 +25,12 @@ const execute = (config, scope) => {
 
 	/** -- DEPLOY SETTINGS -----------------------------------------------------------------------------------------------
 	 *
-	 *	these are unique to each deploy/size/index
-	 *
+	 *	Config is derived from:
+	 *		- these base settings
+	 *		- config object passed to webpack from Creative-Server
+	 *		- Index settings read by Deploy-Manager
 	 *
 	 */
-	// deploy settings
 	DM.config.prepare(
 		_.merge(
 			{
@@ -41,6 +42,7 @@ const execute = (config, scope) => {
 					env: {
 						id: 'debug',
 						runPath: ''
+						// TODO: add dynamic @common alias that resolves to [profile.env.common]
 					}
 				},
 
@@ -54,7 +56,8 @@ const execute = (config, scope) => {
 					// name: 'index' // if not specified, this will be derived from [source.index]
 				},
 
-				// discovered ad settings are added/maintained here
+				// discovered ad settings are added/refreshed here
+				// see index.html hooks for more info
 				settings: {},
 
 				// output
@@ -67,60 +70,13 @@ const execute = (config, scope) => {
 			config.deploy
 		)
 	)
-
 	// get settings from [source.context][source.size][source.index]
 	DM.adManager.applyIndexSettings(DM.config.get())
-
 	// apply environment id back to [source.context][source.size][source.index]
 	DM.adManager.applyEnvironment(DM.config.get())
 
 	log('\nConfig:')
 	log(DM.config.get())
-
-	// /** -- AD SETTINGS -----------------------------------------------------------------------------------------------
-	//  *
-	//  *	these settings are unique to framework
-	//  *
-	//  *
-	//  */
-	// // ad settings
-	// DM.ad.prepare(
-	// 	_.merge(
-	// 		{
-
-	// 			// ** AD STRUCTURE: common locations
-	// 			// paths: {
-	// 			// 	// the subpaths for these standard locations can be set
-	// 			// 	ad: {
-	// 			// 		context: `${DM.config.get().source.size}`,
-	// 			// 		js: 'js',
-	// 			// 		images: 'images',
-	// 			// 		videos: 'videos'
-	// 			// 	},
-	// 			// 	common: {
-	// 			// 		context: 'common',
-	// 			// 		js: 'js',
-	// 			// 		fonts: 'fonts'
-	// 			// 	},
-	// 			// 	// `index.html?debug=true` will cause the ad to load from this location
-	// 			// 	debug: {
-	// 			// 		domain: 'red.ff0000-cdn.net',
-	// 			// 		path:
-	// 			// 			`/_debug/${DM.config.get().profile.client}/${DM.config.get().profile.project}/` +
-	// 			// 			`${DM.config.get().source.size}/${DM.config.get().source.index}`
-	// 			// 	}
-	// 			// },
-	// 			// ad.env is added here
-	// 			env: {}
-	// 		},
-	// 		config.ad
-	// 	)
-	// )
-
-	// /*** LOAD EXTERNAL SETTINGS **/
-	// DM.ad.refresh()
-	// log('\nAd:')
-	// log(DM.ad.get())
 
 	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
 	 *
@@ -128,7 +84,6 @@ const execute = (config, scope) => {
 	 *
 	 *
 	 */
-
 	// payload plugin watches index for settings & preloader changes
 	DM.payload.prepare(
 		_.merge(
