@@ -1,5 +1,6 @@
-const Deploy = require('./lib/deploy/deploy.js')
-const Ad = require('./lib/ad/ad.js')
+const config = require('./lib/config/manager.js')
+const adManager = require('./lib/ad/manager.js')
+
 const Payload = require('./lib/payload/payload.js')
 const Aliases = require('./lib/utils/aliases.js')
 const Plugins = require('./lib/plugins')
@@ -8,13 +9,6 @@ const Babel = require('./lib/babel')
 
 const debug = require('@ff0000-ad-tech/debug')
 var log = debug('DM')
-
-// deploy
-var deploy = Deploy
-
-// ad
-var ad = Ad
-ad.init(deploy)
 
 // payload
 var payload = Payload
@@ -32,8 +26,8 @@ var plugins = Plugins
 var optimization = Optimization
 
 module.exports = {
-	deploy,
-	ad,
+	config: config.Config,
+	adManager,
 	payload,
 	aliases,
 	babel,
