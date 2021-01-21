@@ -38,19 +38,31 @@ const execute = (config, scope) => {
 					name: 'default',
 					// the ad's environment can be specified by the deploy.
 					// by default, it will be determined by the settings loaded from [settings.source.path]
-					adEnvironment: {
-						id: 'debug',
-						runPath: '',
-						adPath: ''
-					}
+					adEnvironment: DM.ad.getEnvironment()
+					// {
+					// 	id: 'debug',
+					// 	runPath: '',
+					// 	adPath: ''
+					// }
 				},
 
 				// source
 				source: {
 					context: './1-build',
+					common: 'common',
 					size: '300x250',
 					index: 'index.html'
 					// name: 'index' // if not specified, this will be derived from [source.index]
+				},
+
+				settings: {
+					// ** REQUIRED: where to load settings from
+					source: {
+						path: `[source.context]/[source.size]/[source.index]`,
+						type: 'hooks' // default, json
+					},
+					// discovered ad.settings are added/maintained here
+					ref: DM.ad.getAdSettings()
 				},
 
 				// output
@@ -63,64 +75,60 @@ const execute = (config, scope) => {
 			config.deploy
 		)
 	)
+
+	// apply settings from source.context.size.index
+	// DM.deploy.mergeAdSettings()
+
+	// give deploy ability to override ad environment
+	// DM.ad.setAdEnvironment(DM.deploy.get().profile.adEnvironment, DM.deploy.get().output.debug)
+
 	log('\nDeploy:')
 	log(DM.deploy.get())
 
-	/** -- AD SETTINGS -----------------------------------------------------------------------------------------------
-	 *
-	 *	these settings are unique to framework
-	 *
-	 *
-	 */
-	// ad settings
-	DM.ad.prepare(
-		_.merge(
-			{
-				settings: {
-					// ** REQUIRED: where to load settings from
-					source: {
-						path: `${DM.deploy.get().source.context}/${DM.deploy.get().source.size}/${DM.deploy.get().source.index}`,
-						type: 'hooks' // default, json
-					},
-					// discovered ad.settings are added/maintained here
-					ref: {}
-				},
+	// /** -- AD SETTINGS -----------------------------------------------------------------------------------------------
+	//  *
+	//  *	these settings are unique to framework
+	//  *
+	//  *
+	//  */
+	// // ad settings
+	// DM.ad.prepare(
+	// 	_.merge(
+	// 		{
 
-				// ** AD STRUCTURE: common locations
-				paths: {
-					// the subpaths for these standard locations can be set
-					ad: {
-						context: `${DM.deploy.get().source.size}`,
-						js: 'js',
-						images: 'images',
-						videos: 'videos'
-					},
-					common: {
-						context: 'common',
-						js: 'js',
-						fonts: 'fonts'
-					},
-					// `index.html?debug=true` will cause the ad to load from this location
-					debug: {
-						domain: 'red.ff0000-cdn.net',
-						path:
-							`/_debug/${DM.deploy.get().profile.client}/${DM.deploy.get().profile.project}/` +
-							`${DM.deploy.get().source.size}/${DM.deploy.get().source.index}`
-					}
-				},
-				// ad.env is added here
-				env: {}
-			},
-			config.ad
-		)
-	)
-	// give deploy ability to override ad environment
-	DM.ad.setAdEnvironment(DM.deploy.get().profile.adEnvironment, DM.deploy.get().output.debug)
+	// 			// ** AD STRUCTURE: common locations
+	// 			// paths: {
+	// 			// 	// the subpaths for these standard locations can be set
+	// 			// 	ad: {
+	// 			// 		context: `${DM.deploy.get().source.size}`,
+	// 			// 		js: 'js',
+	// 			// 		images: 'images',
+	// 			// 		videos: 'videos'
+	// 			// 	},
+	// 			// 	common: {
+	// 			// 		context: 'common',
+	// 			// 		js: 'js',
+	// 			// 		fonts: 'fonts'
+	// 			// 	},
+	// 			// 	// `index.html?debug=true` will cause the ad to load from this location
+	// 			// 	debug: {
+	// 			// 		domain: 'red.ff0000-cdn.net',
+	// 			// 		path:
+	// 			// 			`/_debug/${DM.deploy.get().profile.client}/${DM.deploy.get().profile.project}/` +
+	// 			// 			`${DM.deploy.get().source.size}/${DM.deploy.get().source.index}`
+	// 			// 	}
+	// 			// },
+	// 			// ad.env is added here
+	// 			env: {}
+	// 		},
+	// 		config.ad
+	// 	)
+	// )
 
-	/*** LOAD EXTERNAL SETTINGS **/
-	DM.ad.refresh()
-	log('\nAd:')
-	log(DM.ad.get())
+	// /*** LOAD EXTERNAL SETTINGS **/
+	// DM.ad.refresh()
+	// log('\nAd:')
+	// log(DM.ad.get())
 
 	/** -- PAYLOAD SETTINGS -----------------------------------------------------------------------------------------------
 	 *
@@ -142,13 +150,7 @@ const execute = (config, scope) => {
 						name: 'inline',
 						type: 'inline',
 						assets: {
-							get: () => {
-								return DM.ad.get().settings.ref.assets.preloader.images.map(obj => {
-									return obj.source
-								})
-							},
-							importPath: `./${DM.ad.get().paths.ad.images}`,
-							requestPath: `${DM.ad.get().paths.ad.images}`
+							get: () => DM.ad.get().settings.ref.assets.preloader
 						}
 					}
 				]
