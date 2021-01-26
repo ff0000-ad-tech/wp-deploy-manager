@@ -1,4 +1,4 @@
-const config = require('./lib/config/manager.js')
+const deployManager = require('./lib/deploy/manager.js')
 const adManager = require('./lib/ad/manager.js')
 
 const Payload = require('./lib/payload/payload.js')
@@ -26,7 +26,7 @@ var plugins = Plugins
 var optimization = Optimization
 
 module.exports = {
-	config: config.Config,
+	deploy: deployManager.Config,
 	adManager,
 	payload,
 	aliases,
