@@ -157,10 +157,12 @@ const execute = (config) => {
 				'@common': `${sourceContext}/common`,
 				'@size': `${sourceContext}/${DM.deploy.get().source.size}`
 			}),
-			plugins: [new IndexVariationResolvePlugin(DM.deploy.get().source.index.replace('.html', ''))]
+			plugins: [new IndexVariationResolvePlugin(DM.deploy.get().source.index.replace('.html', ''))],
+			modules: ['node_modules', path.resolve(__dirname, 'node_modules')]
 		},
 		module: {
 			rules: DM.babel.getBabel({
+				root: __dirname,
 				base64Inline: DM.deploy.get().profile.base64Inline
 			})
 		},
