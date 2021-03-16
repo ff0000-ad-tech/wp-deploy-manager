@@ -39,6 +39,7 @@
 		"babel-loader": "^8.2.2",
 		"clean-webpack-plugin": "^0.1.19",
 		"copy-webpack-plugin": "^4.5.1",
+		"core-js": "^3.9.1",
 		"css-loader": "^5.0.1",
 		"escape-string-regexp": "^1.0.5",
 		"event-callback-webpack-plugin": "^1.1.2",
