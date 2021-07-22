@@ -162,15 +162,14 @@ const execute = (config) => {
 		},
 		module: {
 			rules: DM.babel.getBabel({
-				root: __dirname,
-				base64Inline: DM.deploy.get().profile.base64Inline
+				root: __dirname
 			})
 		},
 		plugins: DM.plugins.getPlugins({
 			scope: config.scope,
 			DM,
 			PM,
-			base64Inline: DM.deploy.get().profile.base64Inline
+			fbaCompile: DM.deploy.get().profile.fbaCompile
 		}),
 		externals: {
 			'ad-global': 'window'
