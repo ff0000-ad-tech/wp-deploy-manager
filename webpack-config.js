@@ -97,34 +97,34 @@ const execute = (config) => {
 	log('DM.deploy Config:')
 	log(DM.deploy.get())
 
-	/** -- PAYLOAD SETTINGS ----
-	 *
-	 *
-	 *
-	 *
-	 */
-	// payload plugin watches index for settings & preloader changes
-	DM.payload.prepare(
-		_.merge(
-			{
-				// payload settings
-				watchPaths: [path.resolve(`${config.scope}/${DM.deploy.get().source.path}`)],
-				entries: [
-					{
-						name: 'inline',
-						type: 'inline',
-						assets: {
-							get: () => DM.deploy.get().settings.assets.preloader
-						}
-					}
-				]
-			},
-			config.payload
-		)
-	)
-	log(``)
-	log('Payload:')
-	log(DM.payload.get())
+	// /** -- PAYLOAD SETTINGS ----
+	//  *
+	//  *
+	//  *
+	//  *
+	//  */
+	// // payload plugin watches index for settings & preloader changes
+	// DM.payload.prepare(
+	// 	_.merge(
+	// 		{
+	// 			// payload settings
+	// 			watchPaths: [path.resolve(`${config.scope}/${DM.deploy.get().source.path}`)],
+	// 			entries: [
+	// 				{
+	// 					name: 'inline',
+	// 					type: 'inline',
+	// 					assets: {
+	// 						get: () => DM.deploy.get().settings.assets.preloader
+	// 					}
+	// 				}
+	// 			]
+	// 		},
+	// 		config.payload
+	// 	)
+	// )
+	// log(``)
+	// log('Payload:')
+	// log(DM.payload.get())
 
 	/** -- WEBPACK RUNTIME ----
 	 *
