@@ -174,7 +174,7 @@ const execute = (config) => {
 		externals: {
 			'ad-global': 'window'
 		},
-		optimization: DM.optimization.getOptimization(),
+		optimization: DM.optimization.getOptimization({ optimize: DM.deploy.get().profile.optimize }),
 		watch: DM.deploy.get().output.debug,
 		devtool: DM.deploy.get().output.debug ? 'source-map' : false
 	}
