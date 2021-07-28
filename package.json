@@ -17,7 +17,7 @@
 		"type": "git",
 		"url": "https://github.com/ff0000-ad-tech/wp-deploy-manager.git"
 	},
-	"author": "RED Interactive Agency",
+	"author": "160over90",
 	"license": "MIT",
 	"dependencies": {
 		"@babel/core": "^7.13.10",
@@ -29,9 +29,9 @@
 		"@babel/preset-env": "^7.13.10",
 		"@ff0000-ad-tech/comment-hooks": "^1.1.0",
 		"@ff0000-ad-tech/debug": "^4.0.2",
-		"@ff0000-ad-tech/fba-loader": "ssh+git@github.com:ff0000-ad-tech/fba-loader.git#no-fba-payload",
-		"@ff0000-ad-tech/wp-plugin-assets": "ssh+git@github.com:ff0000-ad-tech/wp-plugin-assets.git#no-fba-payload",
-		"@ff0000-ad-tech/wp-plugin-index": "ssh+git@github.com:ff0000-ad-tech/wp-plugin-index.git#no-fba-payload",
+		"@ff0000-ad-tech/fba-loader": "^2.0.0",
+		"@ff0000-ad-tech/wp-plugin-assets": "^5.0.0",
+		"@ff0000-ad-tech/wp-plugin-index": "^5.0.0",
 		"@ff0000-ad-tech/wp-plugin-watch-offset": "^2.0.0",
 		"@ff0000-ad-tech/wp-process-manager": "^2.0.0",
 		"@ff0000-ad-tech/wp-resolve-plugin-index-variation": "^1.0.2",
