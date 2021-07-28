@@ -97,34 +97,34 @@ const execute = (config) => {
 	log('DM.deploy Config:')
 	log(DM.deploy.get())
 
-	/** -- PAYLOAD SETTINGS ----
-	 *
-	 *
-	 *
-	 *
-	 */
-	// payload plugin watches index for settings & preloader changes
-	DM.payload.prepare(
-		_.merge(
-			{
-				// payload settings
-				watchPaths: [path.resolve(`${config.scope}/${DM.deploy.get().source.path}`)],
-				entries: [
-					{
-						name: 'inline',
-						type: 'inline',
-						assets: {
-							get: () => DM.deploy.get().settings.assets.preloader
-						}
-					}
-				]
-			},
-			config.payload
-		)
-	)
-	log(``)
-	log('Payload:')
-	log(DM.payload.get())
+	// /** -- PAYLOAD SETTINGS ----
+	//  *
+	//  *
+	//  *
+	//  *
+	//  */
+	// // payload plugin watches index for settings & preloader changes
+	// DM.payload.prepare(
+	// 	_.merge(
+	// 		{
+	// 			// payload settings
+	// 			watchPaths: [path.resolve(`${config.scope}/${DM.deploy.get().source.path}`)],
+	// 			entries: [
+	// 				{
+	// 					name: 'inline',
+	// 					type: 'inline',
+	// 					assets: {
+	// 						get: () => DM.deploy.get().settings.assets.preloader
+	// 					}
+	// 				}
+	// 			]
+	// 		},
+	// 		config.payload
+	// 	)
+	// )
+	// log(``)
+	// log('Payload:')
+	// log(DM.payload.get())
 
 	/** -- WEBPACK RUNTIME ----
 	 *
@@ -162,20 +162,19 @@ const execute = (config) => {
 		},
 		module: {
 			rules: DM.babel.getBabel({
-				root: __dirname,
-				base64Inline: DM.deploy.get().profile.base64Inline
+				root: __dirname
 			})
 		},
 		plugins: DM.plugins.getPlugins({
 			scope: config.scope,
 			DM,
 			PM,
-			base64Inline: DM.deploy.get().profile.base64Inline
+			fbaCompile: DM.deploy.get().profile.fbaCompile
 		}),
 		externals: {
 			'ad-global': 'window'
 		},
-		optimization: DM.optimization.getOptimization(),
+		optimization: DM.optimization.getOptimization({ optimize: DM.deploy.get().profile.optimize }),
 		watch: DM.deploy.get().output.debug,
 		devtool: DM.deploy.get().output.debug ? 'source-map' : false
 	}
