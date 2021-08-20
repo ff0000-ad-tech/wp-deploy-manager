@@ -90,8 +90,6 @@ const execute = (config) => {
 	)
 	// get settings from [source.context][source.size][source.index]
 	DM.adManager.applyIndexSettings(config.scope, DM.deploy.get())
-	// apply environment id back to [source.context][source.size][source.index]
-	DM.adManager.applyEnvironment(DM.deploy.get())
 
 	log(``)
 	log('DM.deploy Config:')
