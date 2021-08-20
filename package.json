@@ -36,6 +36,7 @@
 		"@ff0000-ad-tech/wp-process-manager": "^2.0.0",
 		"@ff0000-ad-tech/wp-resolve-plugin-index-variation": "^1.0.2",
 		"babel-loader": "^8.2.2",
+		"babel-plugin-transform-async-to-promises": "^0.8.15",
 		"clean-webpack-plugin": "^3.0.0",
 		"copy-webpack-plugin": "^4.5.1",
 		"core-js": "^3.9.1",
