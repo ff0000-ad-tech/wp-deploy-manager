@@ -95,35 +95,6 @@ const execute = (config) => {
 	log('DM.deploy Config:')
 	log(DM.deploy.get())
 
-	// /** -- PAYLOAD SETTINGS ----
-	//  *
-	//  *
-	//  *
-	//  *
-	//  */
-	// // payload plugin watches index for settings & preloader changes
-	// DM.payload.prepare(
-	// 	_.merge(
-	// 		{
-	// 			// payload settings
-	// 			watchPaths: [path.resolve(`${config.scope}/${DM.deploy.get().source.path}`)],
-	// 			entries: [
-	// 				{
-	// 					name: 'inline',
-	// 					type: 'inline',
-	// 					assets: {
-	// 						get: () => DM.deploy.get().settings.assets.preloader
-	// 					}
-	// 				}
-	// 			]
-	// 		},
-	// 		config.payload
-	// 	)
-	// )
-	// log(``)
-	// log('Payload:')
-	// log(DM.payload.get())
-
 	/** -- WEBPACK RUNTIME ----
 	 *
 	 *
@@ -149,9 +120,6 @@ const execute = (config) => {
 			// mainFields: ['module', 'main', 'browser'],
 			extensions: ['.js', '.jsx'],
 			alias: Object.assign({
-				AdData: `${sourceContext}/common/js/AdData`,
-				FtData: `${sourceContext}/common/js/FtData`,
-				GdcData: `${sourceContext}/common/js/GdcData`,
 				'@common': `${sourceContext}/common`,
 				'@size': `${sourceContext}/${DM.deploy.get().source.size}`
 			}),
