@@ -17,7 +17,7 @@ var log = debug('DM:webpack.config.js')
  *
  * This module intended to be required into a real webpack.config.js
  */
-const execute = (config) => {
+const execute = async (config) => {
 	if (config) {
 		config = JSON.parse(config)
 	} else {
@@ -53,15 +53,14 @@ const execute = (config) => {
 			{
 				// deploy profile
 				profile: {
-					name: 'default',
-					// the ad's environment can be specified by the deploy.
-					// by default, it will be determined by the settings loaded from [settings.source.path]
-					env: {
-						id: 'debug',
-						runPath: ''
-						// TODO: 	add index/build support for dynamic @common alias
-						//				that resolves to [profile.env.common]
-					}
+					name: 'default'
+				},
+
+				// the context from which the ad will subload its assets
+				// NOTE: deploy.config.env is passed from Creative Server by default
+				env: {
+					runPath: '',
+					adPath: ''
 				},
 
 				// source
@@ -74,10 +73,6 @@ const execute = (config) => {
 					// name: 'index' // if not specified, this will be derived from [source.index]
 				},
 
-				// discovered ad settings are added/refreshed here
-				// see index.html hooks for more info
-				settings: {},
-
 				// output
 				output: {
 					debug: true,
@@ -88,14 +83,17 @@ const execute = (config) => {
 			config.deploy
 		)
 	)
-	// get settings from [source.context][source.size][source.index]
-	DM.adManager.applyIndexSettings(config.scope, DM.deploy.get())
+
+	// discovered ad settings are added here
+	// see index.html hooks for more info
+	// NOTE: config.deploy.settings can override what's in the index
+	DM.deploy.get().settings = await DM.adManager.applyIndexSettings(config.scope, DM.deploy.get())
 
 	log(``)
 	log('DM.deploy Config:')
 	log(DM.deploy.get())
 
-	/** -- WEBPACK RUNTIME ----
+	/** -- CONTEXT ----
 	 *
 	 *
 	 *
@@ -103,6 +101,11 @@ const execute = (config) => {
 	const sourceContext = path.resolve(config.scope, DM.deploy.get().source.context)
 	const outputContext = path.resolve(config.scope, DM.deploy.get().output.context)
 
+	/** -- WEBPACK RUNTIME ----
+	 *
+	 *
+	 *
+	 */
 	return {
 		mode: DM.deploy.get().output.debug ? 'development' : 'production',
 		entry: {
