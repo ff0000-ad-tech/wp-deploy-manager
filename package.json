@@ -45,7 +45,7 @@
 		"event-hooks-webpack-plugin": "^2.2.0",
 		"file-loader": "^1.1.11",
 		"lodash": "^4.17.4",
-		"normalize-url": "^7.0.2",
+		"normalize-url": "^6.1.0",
 		"object-path": "^0.11.4",
 		"prepend-http": "^2.0.0",
 		"promise-polyfill": "^7.0.0",
