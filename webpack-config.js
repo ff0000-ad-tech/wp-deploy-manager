@@ -17,9 +17,9 @@ var log = debug('DM:webpack.config.js')
  *
  * This module intended to be required into a real webpack.config.js
  */
-const execute = async (config) => {
-	if (config) {
-		config = JSON.parse(config)
+const execute = async (env) => {
+	if (env.settings) {
+		config = JSON.parse(env.settings)
 	} else {
 		config = {}
 	}
@@ -115,6 +115,7 @@ const execute = async (config) => {
 			// is bundled & polite-loaded into index.html
 			build: `${sourceContext}/${DM.deploy.get().source.size}/build.js`
 		},
+		target: 'web',
 		output: {
 			path: `${outputContext}/${DM.deploy.get().output.folder}`,
 			filename: '[name].bundle.js'
