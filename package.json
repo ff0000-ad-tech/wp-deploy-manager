@@ -69,6 +69,6 @@
 	},
 	"peerDependencies": {
 		"acorn": "6.x",
-		"webpack": "4.x"
+		"webpack": "5.x"
 	}
 }
