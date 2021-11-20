@@ -43,7 +43,6 @@
 		"css-loader": "^5.0.1",
 		"escape-string-regexp": "^1.0.5",
 		"event-hooks-webpack-plugin": "^2.2.0",
-		"file-loader": "^1.1.11",
 		"lodash": "^4.17.4",
 		"normalize-url": "^6.1.0",
 		"object-path": "^0.11.4",
@@ -68,7 +67,6 @@
 		"prettier": "^2.3.2"
 	},
 	"peerDependencies": {
-		"acorn": "6.x",
 		"webpack": "5.x"
 	}
 }
