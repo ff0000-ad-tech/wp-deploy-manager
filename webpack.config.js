@@ -10,6 +10,6 @@
  */
 const wp = require('./webpack-config.js')
 
-module.exports = (config) => {
-	return wp.execute(config)
+module.exports = async (env) => {
+	return await wp.execute(env)
 }
